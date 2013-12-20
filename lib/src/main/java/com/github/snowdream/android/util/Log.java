@@ -216,7 +216,12 @@ public class Log {
         bufferlog.append(caller.getClassName());
         bufferlog.append(".");
         bufferlog.append(caller.getMethodName());
-        bufferlog.append("(): ");
+        bufferlog.append("( ");
+        bufferlog.append(caller.getFileName());
+        bufferlog.append(": ");
+        bufferlog.append(caller.getLineNumber());
+        bufferlog.append(") ");
+        bufferlog.append(System.getProperty("line.separator"));
         bufferlog.append(msg);
         if (thr != null) {
             bufferlog.append(System.getProperty("line.separator"));
