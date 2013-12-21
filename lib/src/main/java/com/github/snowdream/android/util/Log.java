@@ -17,6 +17,7 @@
 package com.github.snowdream.android.util;
 
 import android.text.TextUtils;
+
 import org.apache.commons.lang3.time.FastDateFormat;
 
 import java.io.File;
@@ -181,6 +182,11 @@ public class Log {
      * @return Message String
      */
     protected static String buildMessage(TYPE type, String tag, String msg, Throwable thr) {
+        //set the default log path
+        if (TextUtils.isEmpty(path)) {
+            setPath(logDirPath, logFileBaseName, logFileSuffix);
+        }
+
         StackTraceElement caller = new Throwable().fillInStackTrace()
                 .getStackTrace()[2];
 
