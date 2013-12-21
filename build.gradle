@@ -20,13 +20,15 @@
 
 
 
+
+
 buildscript {
     repositories {
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.6.1+'
+        classpath 'com.android.tools.build:gradle:0.7.0+'
     }
 }
 
