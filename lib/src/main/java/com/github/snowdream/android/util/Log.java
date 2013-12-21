@@ -226,8 +226,8 @@ public class Log {
         bufferlog.append(caller.getFileName());
         bufferlog.append(": ");
         bufferlog.append(caller.getLineNumber());
-        bufferlog.append(") ");
-        bufferlog.append(System.getProperty("line.separator"));
+        bufferlog.append(")");
+        bufferlog.append(" : ");
         bufferlog.append(msg);
         if (thr != null) {
             bufferlog.append(System.getProperty("line.separator"));
