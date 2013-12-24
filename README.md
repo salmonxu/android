@@ -13,13 +13,13 @@ Download [the latest jar][1] or grab via Maven:
 <dependency>
   <groupId>com.github.snowdream.android.util</groupId>
   <artifactId>log</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 
 or Gradle:
 ```groovy
-    compile 'com.github.snowdream.android.util:log:1.0.2'
+    compile 'com.github.snowdream.android.util:log:1.0.3'
 ```
 
 ##Usage
@@ -113,4 +113,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 
-[1]:https://oss.sonatype.org/content/groups/public/com/github/snowdream/android/util/log/1.0.2/log-1.0.2.jar
+[1]:https://oss.sonatype.org/content/groups/public/com/github/snowdream/android/util/log/1.0.3/log-1.0.3.jar
