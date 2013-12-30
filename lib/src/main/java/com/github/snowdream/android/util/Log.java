@@ -127,7 +127,7 @@ public class Log {
     /**
      * The log dir path
      */
-    protected static String logDirPath = "/mnt/sdcard/snowdream/android-log";
+    protected static String logDirPath = "/mnt/sdcard/snowdream/android/log";
     /**
      * The log file base name
      */
