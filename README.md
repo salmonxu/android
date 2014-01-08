@@ -6,6 +6,9 @@ android lib - log
 ##System requirements
 Android 2.2+
 
+##Dependencies
+Apache commons-lang3   [http://commons.apache.org/proper/commons-lang/](http://commons.apache.org/proper/commons-lang/)
+
 ##Download
 Download [the latest jar][1] or grab via Maven:
 
