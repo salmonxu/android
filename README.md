@@ -8,7 +8,7 @@ Android 2.2+
 
 ##Permission requirements
 ```xml
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
 
 ##Dependencies
