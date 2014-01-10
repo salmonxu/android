@@ -6,6 +6,11 @@ android lib - log
 ##System requirements
 Android 2.2+
 
+##Permission requirements
+```xml
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+```
+
 ##Dependencies
 Apache commons-lang3   [http://commons.apache.org/proper/commons-lang/](http://commons.apache.org/proper/commons-lang/)
 
