@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 
@@ -116,6 +117,10 @@ public class Log {
      * WARN
      */
     public static final int LOG_WARN_TO_FILE = 1;
+	/**
+	 * Java utils Calendar for make timestamp
+	 */
+	private static final Calendar calendar = Calendar.getInstance();
     /**
      * The TAG of the Application
      */
@@ -140,6 +145,10 @@ public class Log {
      * The log file path
      */
     protected static String path = "";
+	/**
+	 * Common string line format for Android Log
+	 */
+	protected static String androidLogStringFormat = "%02d-%02d %02d:%02d:%02d.%03d %04d %04d %s %s: %s \n";
     /**
      * Which will be logged into the file
      */
@@ -236,18 +245,26 @@ public class Log {
 
         if (isLog2File) {
             //The log will be written in the log file.
-            StringBuffer filelog = new StringBuffer();
-            filelog.append(type.name());
-            filelog.append("    ");
-            filelog.append(tag);
-            filelog.append("    ");
-            filelog.append(bufferlog);
-
-            Log2File.log2file(path, filelog.toString());
+            Log2File.log2file(path, generateLogString(type, tag, bufferlog.toString()));
         }
 
         return bufferlog.toString();
     }
+
+	private static String generateLogString(TYPE type, String tag, String message) {
+		return String.format(androidLogStringFormat,
+				calendar.get(Calendar.MONTH) + 1,  // java so java
+				calendar.get(Calendar.DAY_OF_MONTH),
+				calendar.get(Calendar.HOUR_OF_DAY),
+				calendar.get(Calendar.MINUTE),
+				calendar.get(Calendar.SECOND),
+				calendar.get(Calendar.MILLISECOND),
+				android.os.Process.myPid(),
+				android.os.Process.myTid(),
+				type.getLevelString(),
+				tag,
+				message);
+	}
 
     /**
      * Send a DEBUG log message and log the exception.
@@ -700,6 +717,20 @@ public class Log {
     }
 
     private enum TYPE {
-        INFO, DEBUG, VERBOSE, WARN, ERROR
+        INFO("I"),
+		DEBUG("D"),
+		VERBOSE("V"),
+		WARN("W"),
+		ERROR("E");
+
+		final String mLevelString;
+
+		TYPE(String levelString) {
+			mLevelString = levelString;
+		}
+
+		String getLevelString() {
+			return mLevelString;
+		}
     }
 }
