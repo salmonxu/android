@@ -170,7 +170,7 @@ public class Log {
             if (tag == null || tag == "") {
                 d(msg);
             } else {
-                android.util.Log.d(TAG, buildMessage(TYPE.DEBUG, TAG, msg, null));
+                android.util.Log.d(TAG, buildMessage(LEVEL.DEBUG, TAG, msg, null));
             }
         }
     }
@@ -180,7 +180,7 @@ public class Log {
      */
     public static void d(String msg) {
         if (isEnable) {
-            android.util.Log.d(TAG, buildMessage(TYPE.DEBUG, TAG, msg, null));
+            android.util.Log.d(TAG, buildMessage(LEVEL.DEBUG, TAG, msg, null));
         }
     }
 
@@ -190,7 +190,7 @@ public class Log {
      * @param msg The message you would like logged.
      * @return Message String
      */
-    protected static String buildMessage(TYPE type, String tag, String msg, Throwable thr) {
+    protected static String buildMessage(LEVEL level, String tag, String msg, Throwable thr) {
         //set the default log path
         if (TextUtils.isEmpty(path)) {
             setPath(logDirPath, logFileBaseName, logFileSuffix);
@@ -206,14 +206,14 @@ public class Log {
                 isLog2File = false;
                 break;
             case LOG_WARN_TO_FILE:
-                if (type == TYPE.WARN) {
+                if (level == LEVEL.WARN) {
                     isLog2File = true;
                 } else {
                     isLog2File = false;
                 }
                 break;
             case LOG_ERROR_TO_FILE:
-                if (type == TYPE.ERROR) {
+                if (level == LEVEL.ERROR) {
                     isLog2File = true;
                 } else {
                     isLog2File = false;
@@ -245,13 +245,13 @@ public class Log {
 
         if (isLog2File) {
             //The log will be written in the log file.
-            Log2File.log2file(path, generateLogString(type, tag, bufferlog.toString()));
+            Log2File.log2file(path, generateLogString(level, tag, bufferlog.toString()));
         }
 
         return bufferlog.toString();
     }
 
-	private static String generateLogString(TYPE type, String tag, String message) {
+	private static String generateLogString(LEVEL level, String tag, String message) {
 		return String.format(androidLogStringFormat,
 				calendar.get(Calendar.MONTH) + 1,  // java so java
 				calendar.get(Calendar.DAY_OF_MONTH),
@@ -261,7 +261,7 @@ public class Log {
 				calendar.get(Calendar.MILLISECOND),
 				android.os.Process.myPid(),
 				android.os.Process.myTid(),
-				type.getLevelString(),
+				level.getLevelString(),
 				tag,
 				message);
 	}
@@ -277,7 +277,7 @@ public class Log {
             if (tag == null || tag == "") {
                 d(msg, thr);
             } else {
-                android.util.Log.d(TAG, buildMessage(TYPE.DEBUG, TAG, msg, thr), thr);
+                android.util.Log.d(TAG, buildMessage(LEVEL.DEBUG, TAG, msg, thr), thr);
             }
         }
     }
@@ -290,7 +290,7 @@ public class Log {
      */
     public static void d(String msg, Throwable thr) {
         if (isEnable) {
-            android.util.Log.d(TAG, buildMessage(TYPE.DEBUG, TAG, msg, thr), thr);
+            android.util.Log.d(TAG, buildMessage(LEVEL.DEBUG, TAG, msg, thr), thr);
         }
     }
 
@@ -304,7 +304,7 @@ public class Log {
             if (tag == null || tag == "") {
                 e(msg);
             } else {
-                android.util.Log.e(TAG, buildMessage(TYPE.ERROR, TAG, msg, null));
+                android.util.Log.e(TAG, buildMessage(LEVEL.ERROR, TAG, msg, null));
             }
         }
     }
@@ -316,7 +316,7 @@ public class Log {
      */
     public static void e(String msg) {
         if (isEnable) {
-            android.util.Log.e(TAG, buildMessage(TYPE.ERROR, TAG, msg, null));
+            android.util.Log.e(TAG, buildMessage(LEVEL.ERROR, TAG, msg, null));
         }
     }
 
@@ -331,7 +331,7 @@ public class Log {
             if (tag == null || tag == "") {
                 e(msg, thr);
             } else {
-                android.util.Log.e(TAG, buildMessage(TYPE.ERROR, TAG, msg, thr), thr);
+                android.util.Log.e(TAG, buildMessage(LEVEL.ERROR, TAG, msg, thr), thr);
             }
         }
     }
@@ -344,7 +344,7 @@ public class Log {
      */
     public static void e(String msg, Throwable thr) {
         if (isEnable) {
-            android.util.Log.e(TAG, buildMessage(TYPE.ERROR, TAG, msg, thr), thr);
+            android.util.Log.e(TAG, buildMessage(LEVEL.ERROR, TAG, msg, thr), thr);
         }
     }
 
@@ -467,7 +467,7 @@ public class Log {
             if (tag == null || tag == "") {
                 i(msg);
             } else {
-                android.util.Log.i(TAG, buildMessage(TYPE.INFO, TAG, msg, null));
+                android.util.Log.i(TAG, buildMessage(LEVEL.INFO, TAG, msg, null));
             }
         }
     }
@@ -479,7 +479,7 @@ public class Log {
      */
     public static void i(String msg) {
         if (isEnable) {
-            android.util.Log.i(TAG, buildMessage(TYPE.INFO, TAG, msg, null));
+            android.util.Log.i(TAG, buildMessage(LEVEL.INFO, TAG, msg, null));
         }
     }
 
@@ -494,7 +494,7 @@ public class Log {
             if (tag == null || tag == "") {
                 i(msg, thr);
             } else {
-                android.util.Log.i(TAG, buildMessage(TYPE.INFO, TAG, msg, thr), thr);
+                android.util.Log.i(TAG, buildMessage(LEVEL.INFO, TAG, msg, thr), thr);
             }
         }
     }
@@ -507,7 +507,7 @@ public class Log {
      */
     public static void i(String msg, Throwable thr) {
         if (isEnable) {
-            android.util.Log.i(TAG, buildMessage(TYPE.INFO, TAG, msg, thr), thr);
+            android.util.Log.i(TAG, buildMessage(LEVEL.INFO, TAG, msg, thr), thr);
         }
     }
 
@@ -607,7 +607,7 @@ public class Log {
             if (tag == null || tag == "") {
                 v(msg);
             } else {
-                android.util.Log.v(TAG, buildMessage(TYPE.VERBOSE, TAG, msg, null));
+                android.util.Log.v(TAG, buildMessage(LEVEL.VERBOSE, TAG, msg, null));
             }
         }
     }
@@ -619,7 +619,7 @@ public class Log {
      */
     public static void v(String msg) {
         if (isEnable) {
-            android.util.Log.v(TAG, buildMessage(TYPE.VERBOSE, TAG, msg, null));
+            android.util.Log.v(TAG, buildMessage(LEVEL.VERBOSE, TAG, msg, null));
         }
     }
 
@@ -634,7 +634,7 @@ public class Log {
             if (tag == null || tag == "") {
                 v(msg, thr);
             } else {
-                android.util.Log.v(TAG, buildMessage(TYPE.VERBOSE, TAG, msg, thr), thr);
+                android.util.Log.v(TAG, buildMessage(LEVEL.VERBOSE, TAG, msg, thr), thr);
             }
         }
     }
@@ -647,7 +647,7 @@ public class Log {
      */
     public static void v(String msg, Throwable thr) {
         if (isEnable) {
-            android.util.Log.v(TAG, buildMessage(TYPE.VERBOSE, TAG, msg, thr), thr);
+            android.util.Log.v(TAG, buildMessage(LEVEL.VERBOSE, TAG, msg, thr), thr);
         }
     }
 
@@ -658,7 +658,7 @@ public class Log {
      */
     public static void w(Throwable thr) {
         if (isEnable) {
-            android.util.Log.w(TAG, buildMessage(TYPE.WARN, TAG, "", thr), thr);
+            android.util.Log.w(TAG, buildMessage(LEVEL.WARN, TAG, "", thr), thr);
         }
     }
 
@@ -672,7 +672,7 @@ public class Log {
             if (tag == null || tag == "") {
                 w(msg);
             } else {
-                android.util.Log.w(TAG, buildMessage(TYPE.WARN, TAG, msg, null));
+                android.util.Log.w(TAG, buildMessage(LEVEL.WARN, TAG, msg, null));
             }
         }
     }
@@ -684,7 +684,7 @@ public class Log {
      */
     public static void w(String msg) {
         if (isEnable) {
-            android.util.Log.w(TAG, buildMessage(TYPE.WARN, TAG, msg, null));
+            android.util.Log.w(TAG, buildMessage(LEVEL.WARN, TAG, msg, null));
         }
     }
 
@@ -699,7 +699,7 @@ public class Log {
             if (tag == null || tag == "") {
                 w(msg, thr);
             } else {
-                android.util.Log.w(TAG, buildMessage(TYPE.WARN, TAG, msg, thr), thr);
+                android.util.Log.w(TAG, buildMessage(LEVEL.WARN, TAG, msg, thr), thr);
             }
         }
     }
@@ -712,11 +712,11 @@ public class Log {
      */
     public static void w(String msg, Throwable thr) {
         if (isEnable) {
-            android.util.Log.w(TAG, buildMessage(TYPE.WARN, TAG, msg, thr), thr);
+            android.util.Log.w(TAG, buildMessage(LEVEL.WARN, TAG, msg, thr), thr);
         }
     }
 
-    private enum TYPE {
+    private enum LEVEL {
         INFO("I"),
 		DEBUG("D"),
 		VERBOSE("V"),
@@ -725,7 +725,7 @@ public class Log {
 
 		final String mLevelString;
 
-		TYPE(String levelString) {
+		LEVEL(String levelString) {
 			mLevelString = levelString;
 		}
 
