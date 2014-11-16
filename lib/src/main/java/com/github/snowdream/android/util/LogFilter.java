@@ -6,7 +6,7 @@ import java.security.InvalidParameterException;
 
 /**
  * Decide which log will be written to the file.
- *
+ * <p/>
  * Created by hui.yang on 2014/11/16.
  */
 public abstract class LogFilter {
@@ -54,62 +54,63 @@ public abstract class LogFilter {
             return true;
         }
 
-        public static class LevelFilter extends LogFilter {
-            private Log.LEVEL level = null;
+    }
 
-            //Supress default constructor for noninstantiability
-            private LevelFilter() {
-                throw new AssertionError();
-            }
+    public static class LevelFilter extends LogFilter {
+        private Log.LEVEL level = null;
 
-            /**
-             * set the Level.Any log with the level below it will be filtered.
-             * <p/>
-             *
-             * @param level the minimum level which will not be filtered.
-             */
-            public LevelFilter(Log.LEVEL level) {
-                if (level == null){
-                    throw new InvalidParameterException("level is null or not valid.");
-                }
-
-                this.level = level;
-            }
-
-            @Override
-            public boolean filter(Log.LEVEL level, String tag, String msg) {
-                return level.getLevel() < this.level.getLevel();
-            }
+        //Supress default constructor for noninstantiability
+        private LevelFilter() {
+            throw new AssertionError();
         }
 
-        public static class ContentFilter extends LogFilter{
-            private String msg  = null;
-
-            //Supress default constructor for noninstantiability
-            private ContentFilter() {
-                throw new AssertionError();
+        /**
+         * set the Level.Any log with the level below it will be filtered.
+         * <p/>
+         *
+         * @param level the minimum level which will not be filtered.
+         */
+        public LevelFilter(Log.LEVEL level) {
+            if (level == null) {
+                throw new InvalidParameterException("level is null or not valid.");
             }
 
-            public ContentFilter(String msg) {
-                this.msg = msg;
-            }
+            this.level = level;
+        }
 
-            @Override
-            public boolean filter(Log.LEVEL level, String tag, String msg) {
-                if (level == null || TextUtils.isEmpty(tag) || TextUtils.isEmpty(msg)){
-                    return true;
-                }
+        @Override
+        public boolean filter(Log.LEVEL level, String tag, String msg) {
+            return level.getLevel() < this.level.getLevel();
+        }
+    }
 
-                if (TextUtils.isEmpty(this.msg)){
-                    return false;
-                }
+    public static class ContentFilter extends LogFilter {
+        private String msg = null;
 
-                if (tag.contains(this.msg) || msg.contains(this.msg)){
-                    return false;
-                }
+        //Supress default constructor for noninstantiability
+        private ContentFilter() {
+            throw new AssertionError();
+        }
 
+        public ContentFilter(String msg) {
+            this.msg = msg;
+        }
+
+        @Override
+        public boolean filter(Log.LEVEL level, String tag, String msg) {
+            if (level == null || TextUtils.isEmpty(tag) || TextUtils.isEmpty(msg)) {
                 return true;
             }
+
+            if (TextUtils.isEmpty(this.msg)) {
+                return false;
+            }
+
+            if (tag.contains(this.msg) || msg.contains(this.msg)) {
+                return false;
+            }
+
+            return true;
         }
     }
 }

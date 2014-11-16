@@ -144,7 +144,7 @@ public final class Log {
 
     private static LogFormatter formatter = null;
 
-    private static  List<LogFilter> filters = null;
+    private static List<LogFilter> filters = null;
 
     //Supress default constructor for noninstantiability
     private Log() {
@@ -261,19 +261,19 @@ public final class Log {
      * @param tr
      */
     private static void log2File(LEVEL level, String tag, String msg, Throwable tr) {
-        if (generator == null){
+        if (generator == null) {
             generator = new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/snowdream/android/log");
         }
 
-       if (formatter == null){
-           formatter = new LogFormatter.EclipseFormatter();
-       }
+        if (formatter == null) {
+            formatter = new LogFormatter.EclipseFormatter();
+        }
 
         boolean isFilter = false;
 
-        if (filters != null){
-            for(LogFilter f: filters){
-                if (f.filter(level,tag,msg)){
+        if (filters != null) {
+            for (LogFilter f : filters) {
+                if (f.filter(level, tag, msg)) {
                     isFilter = true;
                     break;
                 }
@@ -281,7 +281,7 @@ public final class Log {
         }
 
         if (!isFilter) {
-            Log2File.log2file(generator.getPath() , formatter.format(level,tag,msg,tr));
+            Log2File.log2file(generator.getPath(), formatter.format(level, tag, msg, tr));
         }
     }
 
@@ -309,7 +309,7 @@ public final class Log {
      * @return path
      */
     public static String getPath() {
-        if (generator == null){
+        if (generator == null) {
             return null;
         }
 
@@ -318,9 +318,10 @@ public final class Log {
 
     /**
      * set the path of the log file
-     *
+     * <p/>
      * use {@link #setFilePathGenerator} instead.
      * This method will be removed in the near future.
+     *
      * @param path
      */
     @Deprecated
@@ -366,32 +367,32 @@ public final class Log {
 
     /**
      * add log filter
-     *
+     * <p/>
      * each one kind
      *
      * @param filter
      * @return true if added successfully,else the filter is null or any filter with the same kind has been added.
      */
-    public static boolean addLogFilter(LogFilter filter){
+    public static boolean addLogFilter(LogFilter filter) {
         boolean ret = true;
 
-        if (filter ==null){
+        if (filter == null) {
             ret = false;
             return ret;
         }
 
-        if (filters == null){
+        if (filters == null) {
             filters = new ArrayList<LogFilter>();
         }
 
-        for (LogFilter f: filters){
-            if (filter.getClass().getName().equals(f.getClass().getName())){
+        for (LogFilter f : filters) {
+            if (filter.getClass().getName().equals(f.getClass().getName())) {
                 ret = false;
                 break;
             }
         }
 
-        if (ret){
+        if (ret) {
             filters.add(filter);
         }
 
@@ -403,7 +404,7 @@ public final class Log {
      *
      * @return
      */
-    public static List<LogFilter> getLogFilters(){
+    public static List<LogFilter> getLogFilters() {
         return filters;
     }
 
@@ -412,6 +413,7 @@ public final class Log {
      * <p/>
      * use {@link com.github.snowdream.android.util.LogFilter} instead.
      * This method will be removed in the near future.
+     *
      * @return the policy of the log
      */
     @Deprecated
@@ -424,6 +426,7 @@ public final class Log {
      * <p/>
      * use {@link com.github.snowdream.android.util.LogFilter} instead.
      * This method will be removed in the near future.
+     *
      * @param policy the policy of the log
      */
     @Deprecated
@@ -439,7 +442,7 @@ public final class Log {
     }
 
     /**
-     * enable or disable the log
+     * enable or disable the log, the default value is true.
      *
      * @param enabled whether to enable the log
      */
@@ -456,6 +459,7 @@ public final class Log {
 
     /**
      * enable or disable writing the log to the console.
+     * the default value is true.
      *
      * @param enabled whether to enable the log
      */
@@ -472,6 +476,7 @@ public final class Log {
 
     /**
      * enable or disable writing the log to the file.
+     * the default value is false.
      *
      * @param enabled whether to enable the log
      */
@@ -534,6 +539,7 @@ public final class Log {
      * Set the Tag of the application
      * use {@link #getGlobalTag}
      * This method will be removed in the near future.
+     *
      * @param tag the Tag of the application
      */
     @Deprecated
@@ -563,6 +569,7 @@ public final class Log {
      * The log file path will be: logDirPath + logFileBaseName + Formated time +logFileSuffix
      * use {@link #setFilePathGenerator} instead.
      * This method will be removed in the near future.
+     *
      * @param logDirPath      the log file dir path,such as "/mnt/sdcard/snowdream/log"
      * @param logFileBaseName the log file base file name,such as "log"
      * @param logFileSuffix   the log file suffix,such as "log"

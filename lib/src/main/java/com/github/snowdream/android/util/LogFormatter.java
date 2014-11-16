@@ -19,7 +19,6 @@ public abstract class LogFormatter {
      */
     public abstract String format(Log.LEVEL level, String tag, String msg, Throwable tr);
 
-
     /**
      * Eclipse Style
      */

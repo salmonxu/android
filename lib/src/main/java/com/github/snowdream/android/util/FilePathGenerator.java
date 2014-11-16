@@ -248,8 +248,9 @@ public abstract class FilePathGenerator {
          * file is app log
          *
          * @param dir
+         * @maxSize the max size of the file,with unit byte.
          */
-        LimitSizeFilePathGenerator(String dir) {
+        LimitSizeFilePathGenerator(String dir, int maxSize) {
             if (dir != null) {
                 this.dir = dir;
             }
