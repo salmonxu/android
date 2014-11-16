@@ -18,11 +18,9 @@ package com.github.snowdream.android.util;
 
 import android.text.TextUtils;
 
-import org.apache.commons.lang3.time.FastDateFormat;
-
-import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -99,7 +97,7 @@ import java.util.concurrent.ExecutorService;
  * Log.e("test 5");
  * </pre>
  */
-public class Log {
+public final class Log {
 
     /**
      * ALL
@@ -117,234 +115,173 @@ public class Log {
      * WARN
      */
     public static final int LOG_WARN_TO_FILE = 1;
-	/**
-	 * Java utils Calendar for make timestamp
-	 */
-	private static final Calendar calendar = Calendar.getInstance();
+
     /**
-     * The TAG of the Application
+     * The GLOBAL_TAG of the Application
      */
-    public static String TAG = "SNOWDREAM";
+    public static String GLOBAL_TAG = "";
     /**
      * Whether to enable the log
      */
-    protected static boolean isEnable = true;
+    protected static boolean isEnabled = true;
+
     /**
-     * The log dir path
+     * Whether to enable log to the console
      */
-    protected static String logDirPath = "/mnt/sdcard/snowdream/android/log";
+    protected static boolean isLog2ConsoleEnabled = true;
+
     /**
-     * The log file base name
+     * Whether to enable log to the file
      */
-    protected static String logFileBaseName = "snowdream";
-    /**
-     * The log file suffix,such as log.
-     */
-    protected static String logFileSuffix = "log";
-    /**
-     * The log file path
-     */
-    protected static String path = "";
-	/**
-	 * Common string line format for Android Log
-	 */
-	protected static String androidLogStringFormat = "%02d-%02d %02d:%02d:%02d.%03d %04d %04d %s %s: %s \n";
+    protected static boolean isLog2FileEnabled = false;
+
     /**
      * Which will be logged into the file
      */
     protected static int policy = LOG_NONE_TO_FILE;
 
-    /**
-     * the constructor
-     */
+    private static FilePathGenerator generator = null;
+
+    private static LogFormatter formatter = null;
+
+    private static  List<LogFilter> filters = null;
+
+    //Supress default constructor for noninstantiability
     private Log() {
+        throw new AssertionError();
+    }
+
+
+    private static void log(LEVEL level, String tag, String msg, Throwable tr) {
+        if (!isEnabled) {
+            return;
+        }
+
+        String curTag = getCurrentTag(tag);
+
+        if (isLog2ConsoleEnabled) {
+            log2Console(level, curTag, msg, tr);
+        }
+
+        if (isLog2FileEnabled) {
+            log2File(level, curTag, msg, tr);
+        }
     }
 
     /**
-     * Send a DEBUG log message.
+     * Get the final tag from the tag.
      *
-     * @param msg The message you would like logged.
+     * @param tag
      */
-    public static void d(String tag, String msg) {
-        if (isEnable) {
-            if (tag == null || tag == "") {
-                d(msg);
-            } else {
-                android.util.Log.d(TAG, buildMessage(LEVEL.DEBUG, TAG, msg, null));
-            }
+    private static String getCurrentTag(String tag) {
+        if (!TextUtils.isEmpty(tag)) {
+            return tag;
         }
+
+        if (!TextUtils.isEmpty(GLOBAL_TAG)) {
+            return GLOBAL_TAG;
+        }
+
+        StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
+        if (stacks.length >= 4) {
+            return stacks[3].getClassName();
+        }
+
+        return null;
     }
 
-    /**
-     * Send a DEBUG log message.
-     */
-    public static void d(String msg) {
-        if (isEnable) {
-            android.util.Log.d(TAG, buildMessage(LEVEL.DEBUG, TAG, msg, null));
-        }
-    }
 
     /**
-     * Building Message
+     * write the log messages to the console.
      *
-     * @param msg The message you would like logged.
-     * @return Message String
+     * @param level
+     * @param tag
+     * @param msg
+     * @param thr
      */
-    protected static String buildMessage(LEVEL level, String tag, String msg, Throwable thr) {
-        //set the default log path
-        if (TextUtils.isEmpty(path)) {
-            setPath(logDirPath, logFileBaseName, logFileSuffix);
-        }
-
-        StackTraceElement caller = new Throwable().fillInStackTrace()
-                .getStackTrace()[2];
-
-        boolean isLog2File = false;
-
-        switch (policy) {
-            case LOG_NONE_TO_FILE:
-                isLog2File = false;
-                break;
-            case LOG_WARN_TO_FILE:
-                if (level == LEVEL.WARN) {
-                    isLog2File = true;
+    protected static void log2Console(LEVEL level, String tag, String msg, Throwable thr) {
+        switch (level) {
+            case VERBOSE:
+                if (thr == null) {
+                    android.util.Log.v(tag, msg);
                 } else {
-                    isLog2File = false;
+                    android.util.Log.v(tag, msg, thr);
                 }
                 break;
-            case LOG_ERROR_TO_FILE:
-                if (level == LEVEL.ERROR) {
-                    isLog2File = true;
+            case DEBUG:
+                if (thr == null) {
+                    android.util.Log.d(tag, msg);
                 } else {
-                    isLog2File = false;
+                    android.util.Log.d(tag, msg, thr);
                 }
                 break;
-            case LOG_ALL_TO_FILE:
-                isLog2File = true;
+            case INFO:
+                if (thr == null) {
+                    android.util.Log.i(tag, msg);
+                } else {
+                    android.util.Log.i(tag, msg, thr);
+                }
+                break;
+            case WARN:
+                if (thr == null) {
+                    android.util.Log.w(tag, msg);
+                } else if (TextUtils.isEmpty(msg)) {
+                    android.util.Log.w(tag, thr);
+                } else {
+                    android.util.Log.w(tag, msg, thr);
+                }
+                break;
+            case ERROR:
+                if (thr == null) {
+                    android.util.Log.e(tag, msg);
+                } else {
+                    android.util.Log.e(tag, msg, thr);
+                }
+                break;
+            case ASSERT:
+                if (thr == null) {
+                    android.util.Log.wtf(tag, msg);
+                } else if (TextUtils.isEmpty(msg)) {
+                    android.util.Log.wtf(tag, thr);
+                } else {
+                    android.util.Log.wtf(tag, msg, thr);
+                }
                 break;
             default:
                 break;
         }
-
-        //The log will be shown in logcat.
-        StringBuffer bufferlog = new StringBuffer();
-        bufferlog.append(caller.getClassName());
-        bufferlog.append(".");
-        bufferlog.append(caller.getMethodName());
-        bufferlog.append("( ");
-        bufferlog.append(caller.getFileName());
-        bufferlog.append(": ");
-        bufferlog.append(caller.getLineNumber());
-        bufferlog.append(")");
-        bufferlog.append(" : ");
-        bufferlog.append(msg);
-        if (thr != null) {
-            bufferlog.append(System.getProperty("line.separator"));
-            bufferlog.append(android.util.Log.getStackTraceString(thr));
-        }
-
-        if (isLog2File) {
-            //The log will be written in the log file.
-            Log2File.log2file(path, generateLogString(level, tag, bufferlog.toString()));
-        }
-
-        return bufferlog.toString();
     }
 
-	private static String generateLogString(LEVEL level, String tag, String message) {
-		return String.format(androidLogStringFormat,
-				calendar.get(Calendar.MONTH) + 1,  // java so java
-				calendar.get(Calendar.DAY_OF_MONTH),
-				calendar.get(Calendar.HOUR_OF_DAY),
-				calendar.get(Calendar.MINUTE),
-				calendar.get(Calendar.SECOND),
-				calendar.get(Calendar.MILLISECOND),
-				android.os.Process.myPid(),
-				android.os.Process.myTid(),
-				level.getLevelString(),
-				tag,
-				message);
-	}
-
     /**
-     * Send a DEBUG log message and log the exception.
+     * write the log messages to the file.
      *
-     * @param msg The message you would like logged.
-     * @param thr An exception to log
+     * @param level
+     * @param tag
+     * @param msg
+     * @param tr
      */
-    public static void d(String tag, String msg, Throwable thr) {
-        if (isEnable) {
-            if (tag == null || tag == "") {
-                d(msg, thr);
-            } else {
-                android.util.Log.d(TAG, buildMessage(LEVEL.DEBUG, TAG, msg, thr), thr);
+    private static void log2File(LEVEL level, String tag, String msg, Throwable tr) {
+        if (generator == null){
+            generator = new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/snowdream/android/log");
+        }
+
+       if (formatter == null){
+           formatter = new LogFormatter.EclipseFormatter();
+       }
+
+        boolean isFilter = false;
+
+        if (filters != null){
+            for(LogFilter f: filters){
+                if (f.filter(level,tag,msg)){
+                    isFilter = true;
+                    break;
+                }
             }
         }
-    }
 
-    /**
-     * Send a DEBUG log message and log the exception.
-     *
-     * @param msg The message you would like logged.
-     * @param thr An exception to log
-     */
-    public static void d(String msg, Throwable thr) {
-        if (isEnable) {
-            android.util.Log.d(TAG, buildMessage(LEVEL.DEBUG, TAG, msg, thr), thr);
-        }
-    }
-
-    /**
-     * Send a ERROR log message.
-     *
-     * @param msg The message you would like logged.
-     */
-    public static void e(String tag, String msg) {
-        if (isEnable) {
-            if (tag == null || tag == "") {
-                e(msg);
-            } else {
-                android.util.Log.e(TAG, buildMessage(LEVEL.ERROR, TAG, msg, null));
-            }
-        }
-    }
-
-    /**
-     * Send an ERROR log message.
-     *
-     * @param msg The message you would like logged.
-     */
-    public static void e(String msg) {
-        if (isEnable) {
-            android.util.Log.e(TAG, buildMessage(LEVEL.ERROR, TAG, msg, null));
-        }
-    }
-
-    /**
-     * Send a ERROR log message and log the exception.
-     *
-     * @param msg The message you would like logged.
-     * @param thr An exception to log
-     */
-    public static void e(String tag, String msg, Throwable thr) {
-        if (isEnable) {
-            if (tag == null || tag == "") {
-                e(msg, thr);
-            } else {
-                android.util.Log.e(TAG, buildMessage(LEVEL.ERROR, TAG, msg, thr), thr);
-            }
-        }
-    }
-
-    /**
-     * Send an ERROR log message and log the exception.
-     *
-     * @param msg The message you would like logged.
-     * @param thr An exception to log
-     */
-    public static void e(String msg, Throwable thr) {
-        if (isEnable) {
-            android.util.Log.e(TAG, buildMessage(LEVEL.ERROR, TAG, msg, thr), thr);
+        if (!isFilter) {
+            Log2File.log2file(generator.getPath() , formatter.format(level,tag,msg,tr));
         }
     }
 
@@ -372,150 +309,133 @@ public class Log {
      * @return path
      */
     public static String getPath() {
-        return path;
+        if (generator == null){
+            return null;
+        }
+
+        return generator.getPath();
     }
 
     /**
      * set the path of the log file
      *
+     * use {@link #setFilePathGenerator} instead.
+     * This method will be removed in the near future.
      * @param path
      */
+    @Deprecated
     public static void setPath(String path) {
-        Log.path = path;
-        createLogDir(path);
+        generator = new FilePathGenerator.DefaultFilePathGenerator(path);
     }
 
     /**
-     * create the Directory from the path
+     * get the FilePathGenerator
      *
-     * @param path
+     * @return the FilePathGenerator
      */
-    private static void createLogDir(String path) {
-        if (TextUtils.isEmpty(path)) {
-            android.util.Log.e("Error", "The path is not valid.");
-            return;
+    public static FilePathGenerator getFilePathGenerator() {
+        return generator;
+    }
+
+    /**
+     * set the FilePathGenerator
+     *
+     * @param generator the FilePathGenerator
+     */
+    public static void setFilePathGenerator(FilePathGenerator generator) {
+        Log.generator = generator;
+    }
+
+    /**
+     * get the log formatter
+     *
+     * @return
+     */
+    public static LogFormatter getLogFormatter() {
+        return formatter;
+    }
+
+    /**
+     * set the log formatter
+     *
+     * @param formatter
+     */
+    public static void setLogFormatter(LogFormatter formatter) {
+        Log.formatter = formatter;
+    }
+
+    /**
+     * add log filter
+     *
+     * each one kind
+     *
+     * @param filter
+     * @return true if added successfully,else the filter is null or any filter with the same kind has been added.
+     */
+    public static boolean addLogFilter(LogFilter filter){
+        boolean ret = true;
+
+        if (filter ==null){
+            ret = false;
+            return ret;
         }
 
-        File file = new File(path);
+        if (filters == null){
+            filters = new ArrayList<LogFilter>();
+        }
 
-        boolean ret;
-        boolean exist;
-
-        exist = file.getParentFile().exists();
-        if (!exist) {
-            ret = file.getParentFile().mkdirs();
-
-            if (!ret) {
-                android.util.Log.e("Error", "The Log Dir can not be created!");
-                return;
+        for (LogFilter f: filters){
+            if (filter.getClass().getName().equals(f.getClass().getName())){
+                ret = false;
+                break;
             }
-            android.util.Log.i("Success", "The Log Dir was successfully created! -" + file.getParent());
         }
+
+        if (ret){
+            filters.add(filter);
+        }
+
+        return ret;
+    }
+
+    /**
+     * get the log filters
+     *
+     * @return
+     */
+    public static List<LogFilter> getLogFilters(){
+        return filters;
     }
 
     /**
      * get the policy of the log
-     *
+     * <p/>
+     * use {@link com.github.snowdream.android.util.LogFilter} instead.
+     * This method will be removed in the near future.
      * @return the policy of the log
      */
+    @Deprecated
     public static int getPolicy() {
         return policy;
     }
 
     /**
      * set the policy of the log
-     *
+     * <p/>
+     * use {@link com.github.snowdream.android.util.LogFilter} instead.
+     * This method will be removed in the near future.
      * @param policy the policy of the log
      */
+    @Deprecated
     public static void setPolicy(int policy) {
         Log.policy = policy;
     }
 
     /**
-     * Handy function to get a loggable stack trace from a Throwable
-     *
-     * @param tr An exception to log
-     * @return
-     */
-    public static String getStackTraceString(Throwable tr) {
-        return android.util.Log.getStackTraceString(tr);
-    }
-
-    /**
-     * Get the Tag of the application
-     */
-    public static String getTag() {
-        return TAG;
-    }
-
-    /**
-     * Set the Tag of the application
-     *
-     * @param tag the Tag of the application
-     */
-    public static void setTag(String tag) {
-        TAG = tag;
-    }
-
-    /**
-     * Send a INFO log message.
-     *
-     * @param msg The message you would like logged.
-     */
-    public static void i(String tag, String msg) {
-        if (isEnable) {
-            if (tag == null || tag == "") {
-                i(msg);
-            } else {
-                android.util.Log.i(TAG, buildMessage(LEVEL.INFO, TAG, msg, null));
-            }
-        }
-    }
-
-    /**
-     * Send an INFO log message.
-     *
-     * @param msg The message you would like logged.
-     */
-    public static void i(String msg) {
-        if (isEnable) {
-            android.util.Log.i(TAG, buildMessage(LEVEL.INFO, TAG, msg, null));
-        }
-    }
-
-    /**
-     * Send a INFO log message and log the exception.
-     *
-     * @param msg The message you would like logged.
-     * @param thr An exception to log
-     */
-    public static void i(String tag, String msg, Throwable thr) {
-        if (isEnable) {
-            if (tag == null || tag == "") {
-                i(msg, thr);
-            } else {
-                android.util.Log.i(TAG, buildMessage(LEVEL.INFO, TAG, msg, thr), thr);
-            }
-        }
-    }
-
-    /**
-     * Send a INFO log message and log the exception.
-     *
-     * @param msg The message you would like logged.
-     * @param thr An exception to log
-     */
-    public static void i(String msg, Throwable thr) {
-        if (isEnable) {
-            android.util.Log.i(TAG, buildMessage(LEVEL.INFO, TAG, msg, thr), thr);
-        }
-    }
-
-    /**
-     * is the log enabled?
+     * is the log enabled
      */
     public static boolean isEnabled() {
-        return isEnable;
+        return isEnabled;
     }
 
     /**
@@ -524,7 +444,39 @@ public class Log {
      * @param enabled whether to enable the log
      */
     public static void setEnabled(boolean enabled) {
-        isEnable = enabled;
+        isEnabled = enabled;
+    }
+
+    /**
+     * is the Log2Console  enabled
+     */
+    public static boolean isLog2ConsoleEnabled() {
+        return isLog2ConsoleEnabled;
+    }
+
+    /**
+     * enable or disable writing the log to the console.
+     *
+     * @param enabled whether to enable the log
+     */
+    public static void setLog2ConsoleEnabled(boolean enabled) {
+        isLog2ConsoleEnabled = enabled;
+    }
+
+    /**
+     * is the Log2Console  enabled
+     */
+    public static boolean isLog2FileEnabled() {
+        return isLog2FileEnabled;
+    }
+
+    /**
+     * enable or disable writing the log to the file.
+     *
+     * @param enabled whether to enable the log
+     */
+    public static void setLog2FileEnabled(boolean enabled) {
+        isLog2FileEnabled = enabled;
     }
 
     /**
@@ -558,44 +510,181 @@ public class Log {
     }
 
     /**
+     * Handy function to get a loggable stack trace from a Throwable
+     *
+     * @param tr An exception to log
+     * @return
+     */
+    public static String getStackTraceString(Throwable tr) {
+        return android.util.Log.getStackTraceString(tr);
+    }
+
+    /**
+     * Get the Tag of the application
+     * <p/>
+     * This method will be removed in the near future.
+     * use {@link #getGlobalTag}
+     */
+    @Deprecated
+    public static String getTag() {
+        return GLOBAL_TAG;
+    }
+
+    /**
+     * Set the Tag of the application
+     * use {@link #getGlobalTag}
+     * This method will be removed in the near future.
+     * @param tag the Tag of the application
+     */
+    @Deprecated
+    public static void setTag(String tag) {
+        GLOBAL_TAG = tag;
+    }
+
+    /**
+     * Get the Tag of the application
+     */
+    public static String getGlobalTag() {
+        return GLOBAL_TAG;
+    }
+
+    /**
+     * Set the Tag of the application
+     *
+     * @param tag the Tag of the application
+     */
+    public static void setGlobalTag(String tag) {
+        GLOBAL_TAG = tag;
+    }
+
+    /**
      * set the log file path
      * <p/>
      * The log file path will be: logDirPath + logFileBaseName + Formated time +logFileSuffix
-     *
+     * use {@link #setFilePathGenerator} instead.
+     * This method will be removed in the near future.
      * @param logDirPath      the log file dir path,such as "/mnt/sdcard/snowdream/log"
      * @param logFileBaseName the log file base file name,such as "log"
      * @param logFileSuffix   the log file suffix,such as "log"
      */
+    @Deprecated
     public static void setPath(String logDirPath, String logFileBaseName, String logFileSuffix) {
-        if (!TextUtils.isEmpty(logDirPath)) {
-            Log.logDirPath = logDirPath;
-        }
-
-        if (!TextUtils.isEmpty(logFileBaseName)) {
-            Log.logFileBaseName = logFileBaseName;
-        }
-
-        if (!TextUtils.isEmpty(logFileSuffix)) {
-            Log.logFileSuffix = logFileSuffix;
-        }
-
-        Date myDate = new Date();
-        FastDateFormat fdf = FastDateFormat.getInstance("yyyy-MM-dd-HH-mm-ss");
-        String myDateString = fdf.format(myDate);
-
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(logDirPath);
-        if (!logDirPath.endsWith("/")) {
-            buffer.append("/");
-        }
-        buffer.append(logFileBaseName);
-        buffer.append("-");
-        buffer.append(myDateString);
-        buffer.append(".");
-        buffer.append(logFileSuffix);
-
-        setPath(buffer.toString());
+        setPath(logDirPath);
     }
+
+    /**
+     * Send a DEBUG log message.
+     *
+     * @param msg The message you would like logged.
+     */
+    public static void d(String tag, String msg) {
+        log(LEVEL.DEBUG, tag, msg, null);
+    }
+
+    /**
+     * Send a DEBUG log message.
+     */
+    public static void d(String msg) {
+        log(LEVEL.DEBUG, null, msg, null);
+    }
+
+    /**
+     * Send a DEBUG log message and log the exception.
+     *
+     * @param msg The message you would like logged.
+     * @param thr An exception to log
+     */
+    public static void d(String tag, String msg, Throwable thr) {
+        log(LEVEL.DEBUG, tag, msg, thr);
+    }
+
+    /**
+     * Send a DEBUG log message and log the exception.
+     *
+     * @param msg The message you would like logged.
+     * @param thr An exception to log
+     */
+    public static void d(String msg, Throwable thr) {
+        log(LEVEL.DEBUG, null, msg, thr);
+    }
+
+    /**
+     * Send a ERROR log message.
+     *
+     * @param msg The message you would like logged.
+     */
+    public static void e(String tag, String msg) {
+        log(LEVEL.ERROR, tag, msg, null);
+    }
+
+    /**
+     * Send an ERROR log message.
+     *
+     * @param msg The message you would like logged.
+     */
+    public static void e(String msg) {
+        log(LEVEL.ERROR, null, msg, null);
+    }
+
+    /**
+     * Send a ERROR log message and log the exception.
+     *
+     * @param msg The message you would like logged.
+     * @param thr An exception to log
+     */
+    public static void e(String tag, String msg, Throwable thr) {
+        log(LEVEL.ERROR, tag, msg, thr);
+    }
+
+    /**
+     * Send an ERROR log message and log the exception.
+     *
+     * @param msg The message you would like logged.
+     * @param thr An exception to log
+     */
+    public static void e(String msg, Throwable thr) {
+        log(LEVEL.ERROR, null, msg, thr);
+    }
+
+
+    /**
+     * Send a INFO log message.
+     *
+     * @param msg The message you would like logged.
+     */
+    public static void i(String tag, String msg) {
+        log(LEVEL.INFO, tag, msg, null);
+    }
+
+    /**
+     * Send an INFO log message.
+     *
+     * @param msg The message you would like logged.
+     */
+    public static void i(String msg) {
+        log(LEVEL.INFO, null, msg, null);
+    }
+
+    /**
+     * Send a INFO log message and log the exception.
+     *
+     * @param msg The message you would like logged.
+     * @param thr An exception to log
+     */
+    public static void i(String tag, String msg, Throwable thr) {
+        log(LEVEL.INFO, tag, msg, thr);
+    }
+
+    /**
+     * Send a INFO log message and log the exception.
+     *
+     * @param msg The message you would like logged.
+     * @param thr An exception to log
+     */
+    public static void i(String msg, Throwable thr) {
+        log(LEVEL.INFO, null, msg, thr);
+    }
+
 
     /**
      * Send a VERBOSE log message.
@@ -603,13 +692,7 @@ public class Log {
      * @param msg The message you would like logged.
      */
     public static void v(String tag, String msg) {
-        if (isEnable) {
-            if (tag == null || tag == "") {
-                v(msg);
-            } else {
-                android.util.Log.v(TAG, buildMessage(LEVEL.VERBOSE, TAG, msg, null));
-            }
-        }
+        log(LEVEL.VERBOSE, tag, msg, null);
     }
 
     /**
@@ -618,9 +701,7 @@ public class Log {
      * @param msg The message you would like logged.
      */
     public static void v(String msg) {
-        if (isEnable) {
-            android.util.Log.v(TAG, buildMessage(LEVEL.VERBOSE, TAG, msg, null));
-        }
+        log(LEVEL.VERBOSE, null, msg, null);
     }
 
     /**
@@ -630,13 +711,7 @@ public class Log {
      * @param thr An exception to log
      */
     public static void v(String tag, String msg, Throwable thr) {
-        if (isEnable) {
-            if (tag == null || tag == "") {
-                v(msg, thr);
-            } else {
-                android.util.Log.v(TAG, buildMessage(LEVEL.VERBOSE, TAG, msg, thr), thr);
-            }
-        }
+        log(LEVEL.VERBOSE, tag, msg, thr);
     }
 
     /**
@@ -646,9 +721,7 @@ public class Log {
      * @param thr An exception to log
      */
     public static void v(String msg, Throwable thr) {
-        if (isEnable) {
-            android.util.Log.v(TAG, buildMessage(LEVEL.VERBOSE, TAG, msg, thr), thr);
-        }
+        log(LEVEL.VERBOSE, null, msg, thr);
     }
 
     /**
@@ -657,9 +730,7 @@ public class Log {
      * @param thr An exception to log
      */
     public static void w(Throwable thr) {
-        if (isEnable) {
-            android.util.Log.w(TAG, buildMessage(LEVEL.WARN, TAG, "", thr), thr);
-        }
+        log(LEVEL.WARN, null, null, thr);
     }
 
     /**
@@ -668,13 +739,7 @@ public class Log {
      * @param msg The message you would like logged.
      */
     public static void w(String tag, String msg) {
-        if (isEnable) {
-            if (tag == null || tag == "") {
-                w(msg);
-            } else {
-                android.util.Log.w(TAG, buildMessage(LEVEL.WARN, TAG, msg, null));
-            }
-        }
+        log(LEVEL.WARN, tag, msg, null);
     }
 
     /**
@@ -683,9 +748,7 @@ public class Log {
      * @param msg The message you would like logged.
      */
     public static void w(String msg) {
-        if (isEnable) {
-            android.util.Log.w(TAG, buildMessage(LEVEL.WARN, TAG, msg, null));
-        }
+        log(LEVEL.WARN, null, msg, null);
     }
 
     /**
@@ -695,13 +758,7 @@ public class Log {
      * @param thr An exception to log
      */
     public static void w(String tag, String msg, Throwable thr) {
-        if (isEnable) {
-            if (tag == null || tag == "") {
-                w(msg, thr);
-            } else {
-                android.util.Log.w(TAG, buildMessage(LEVEL.WARN, TAG, msg, thr), thr);
-            }
-        }
+        log(LEVEL.WARN, tag, msg, thr);
     }
 
     /**
@@ -711,26 +768,84 @@ public class Log {
      * @param thr An exception to log
      */
     public static void w(String msg, Throwable thr) {
-        if (isEnable) {
-            android.util.Log.w(TAG, buildMessage(LEVEL.WARN, TAG, msg, thr), thr);
-        }
+        log(LEVEL.WARN, null, msg, thr);
     }
 
-    private enum LEVEL {
-        INFO("I"),
-		DEBUG("D"),
-		VERBOSE("V"),
-		WARN("W"),
-		ERROR("E");
 
-		final String mLevelString;
+    /**
+     * Send an empty What a Terrible Failure log message and log the exception.
+     *
+     * @param thr An exception to log
+     */
+    public static void wtf(Throwable thr) {
+        log(LEVEL.ASSERT, null, null, thr);
+    }
 
-		LEVEL(String levelString) {
-			mLevelString = levelString;
-		}
+    /**
+     * Send a What a Terrible Failure log message.
+     *
+     * @param msg The message you would like logged.
+     */
+    public static void wtf(String tag, String msg) {
+        log(LEVEL.ASSERT, tag, msg, null);
+    }
 
-		String getLevelString() {
-			return mLevelString;
-		}
+    /**
+     * Send a What a Terrible Failure log message
+     *
+     * @param msg The message you would like logged.
+     */
+    public static void wtf(String msg) {
+        log(LEVEL.ASSERT, null, msg, null);
+    }
+
+    /**
+     * Send a What a Terrible Failure log message and log the exception.
+     *
+     * @param msg The message you would like logged.
+     * @param thr An exception to log
+     */
+    public static void wtf(String tag, String msg, Throwable thr) {
+        log(LEVEL.ASSERT, tag, msg, thr);
+    }
+
+    /**
+     * Send a What a Terrible Failure log message and log the exception.
+     *
+     * @param msg The message you would like logged.
+     * @param thr An exception to log
+     */
+    public static void wtf(String msg, Throwable thr) {
+        log(LEVEL.ASSERT, null, msg, thr);
+    }
+
+    public enum LEVEL {
+        VERBOSE(2, "V"),
+        DEBUG(3, "D"),
+        INFO(4, "I"),
+        WARN(5, "W"),
+        ERROR(6, "E"),
+        ASSERT(7, "A");
+
+        final String levelString;
+        final int level;
+
+        //Supress default constructor for noninstantiability
+        private LEVEL() {
+            throw new AssertionError();
+        }
+
+        private LEVEL(int level, String levelString) {
+            this.level = level;
+            this.levelString = levelString;
+        }
+
+        public String getLevelString() {
+            return this.levelString;
+        }
+
+        public int getLevel() {
+            return this.level;
+        }
     }
 }
