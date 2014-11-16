@@ -17,6 +17,7 @@ public class LogTest extends AndroidTestCase {
         Log.setLog2ConsoleEnabled(true);
         Log.setLog2FileEnabled(true);
         Log.setGlobalTag(TAG);
+        Log.clearLogFilters();
 
         assertEquals(Log.isLog2ConsoleEnabled(), true);
         assertEquals(Log.isLog2FileEnabled(), true);
