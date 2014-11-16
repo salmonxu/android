@@ -151,7 +151,6 @@ public final class Log {
         throw new AssertionError();
     }
 
-
     private static void log(LEVEL level, String tag, String msg, Throwable tr) {
         if (!isEnabled) {
             return;
@@ -189,7 +188,6 @@ public final class Log {
 
         return null;
     }
-
 
     /**
      * write the log messages to the console.
@@ -406,6 +404,32 @@ public final class Log {
      */
     public static List<LogFilter> getLogFilters() {
         return filters;
+    }
+
+    /**
+     * remove the log filter
+     * @param filter
+     */
+    public static void removeLogFilter(LogFilter filter){
+        if (filter == null || filters == null || filters.isEmpty()){
+            return;
+        }
+
+        if (filters.contains(filter)){
+            filters.remove(filter);
+        }
+    }
+
+    /**
+     * remove all the log filters which have been added before.
+     *
+     */
+    public static void clearLogFilters(){
+        if (filters == null || filters.isEmpty()){
+            return;
+        }
+
+        filters.clear();
     }
 
     /**
@@ -653,7 +677,6 @@ public final class Log {
         log(LEVEL.ERROR, null, msg, thr);
     }
 
-
     /**
      * Send a INFO log message.
      *
@@ -691,7 +714,6 @@ public final class Log {
     public static void i(String msg, Throwable thr) {
         log(LEVEL.INFO, null, msg, thr);
     }
-
 
     /**
      * Send a VERBOSE log message.
@@ -777,7 +799,6 @@ public final class Log {
     public static void w(String msg, Throwable thr) {
         log(LEVEL.WARN, null, msg, thr);
     }
-
 
     /**
      * Send an empty What a Terrible Failure log message and log the exception.
