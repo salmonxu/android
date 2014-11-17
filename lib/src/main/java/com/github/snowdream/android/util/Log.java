@@ -260,7 +260,7 @@ public final class Log {
      */
     private static void log2File(LEVEL level, String tag, String msg, Throwable tr) {
         if (generator == null) {
-            generator = new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/snowdream/android/log");
+            generator = new FilePathGenerator.DefaultFilePathGenerator("","","");
         }
 
         if (formatter == null) {
@@ -324,7 +324,7 @@ public final class Log {
      */
     @Deprecated
     public static void setPath(String path) {
-        generator = new FilePathGenerator.DefaultFilePathGenerator(path);
+        generator = new FilePathGenerator.DefaultFilePathGenerator(path,null,null);
     }
 
     /**

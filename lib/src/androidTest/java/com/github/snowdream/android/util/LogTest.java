@@ -1,7 +1,6 @@
 package com.github.snowdream.android.util;
 
 import android.test.AndroidTestCase;
-import junit.framework.Assert;
 
 /**
  * Created by snowdream on 4/8/14.
@@ -53,7 +52,6 @@ public class LogTest extends AndroidTestCase {
         assertEquals(Log.isLog2ConsoleEnabled(), true);
     }
 
-
     public void testEnableOrDisableLog2File() {
         assertEquals(Log.isLog2FileEnabled(), true);
 
@@ -99,9 +97,9 @@ public class LogTest extends AndroidTestCase {
     }
 
     public void testLogIntoFileWithFilePathGenerator() {
-        Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/"));
-//        Log.setFilePathGenerator(new FilePathGenerator.DateFilePathGenerator("/mnt/sdcard/"));
-//        Log.setFilePathGenerator(new FilePathGenerator.LimitSizeFilePathGenerator("/mnt/sdcard/",10240));
+        Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
+//        Log.setFilePathGenerator(new FilePathGenerator.DateFilePathGenerator("/mnt/sdcard/","app",".log"));
+//        Log.setFilePathGenerator(new FilePathGenerator.LimitSizeFilePathGenerator("/mnt/sdcard/","app",".log",10240));
 
         Log.d("test 1");
         Log.v("test 2");
@@ -111,7 +109,7 @@ public class LogTest extends AndroidTestCase {
     }
 
     public void testLogIntoFileWithLogFilter() {
-        Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/"));
+        Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
 
         Log.addLogFilter(new LogFilter.LevelFilter(Log.LEVEL.DEBUG));
 //        Log.addLogFilter(new LogFilter.TagFilter(TAG));
@@ -126,7 +124,7 @@ public class LogTest extends AndroidTestCase {
     }
 
     public void testLogIntoFileWithLogFormatter() {
-        Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/"));
+        Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
 
         Log.addLogFilter(new LogFilter.LevelFilter(Log.LEVEL.DEBUG));
 
@@ -139,4 +137,5 @@ public class LogTest extends AndroidTestCase {
         Log.w("test 4");
         Log.e("test 5");
     }
+
 }

@@ -10,11 +10,74 @@ import java.util.Date;
 
 /**
  * Decide the absolute path of the file which log will be written to.
- *
+ * <p/>
  * Created by hui.yang on 2014/11/13.
  */
 public abstract class FilePathGenerator {
     private String path = null;
+    protected String dir = "/mnt/sdcard/snowdream/android/log";
+    protected File file = null;
+
+    /**
+     * if not set, "app" will be used.
+     */
+    protected String filename = "app";
+
+    /**
+     * if not set, ".log" will be used.
+     */
+    protected String suffix = ".log";
+
+    //Supress default constructor for noninstantiability
+    private FilePathGenerator() {
+        throw new AssertionError();
+    }
+
+    /**
+     * dir will be context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log"
+     * filename will be decided by the param filename and suffix together.
+     *
+     * @param context
+     * @param filename
+     * @param suffix
+     */
+    public FilePathGenerator(Context context, String filename, String suffix) {
+        if (context == null) {
+            throw new NullPointerException("The Context should not be null.");
+        }
+
+        dir = context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log";
+
+        if (!TextUtils.isEmpty(filename)) {
+            this.filename = filename;
+        }
+
+        if (!TextUtils.isEmpty(suffix)) {
+            this.suffix = suffix;
+        }
+    }
+
+    /**
+     * dir is from the param dir.
+     * filename will be decided by the param filename and suffix together.
+     *
+     * @param dir
+     * @param filename
+     * @param suffix
+     */
+    public FilePathGenerator(String dir, String filename, String suffix) {
+        if (dir != null) {
+            this.dir = dir;
+        }
+
+        if (!TextUtils.isEmpty(filename)) {
+            this.filename = filename;
+        }
+
+        if (!TextUtils.isEmpty(suffix)) {
+            this.suffix = suffix;
+        }
+    }
 
     /**
      * Generate the file path of the log.
@@ -59,42 +122,34 @@ public abstract class FilePathGenerator {
         return path;
     }
 
-
     /**
      * Default FilePathGenerator
-     *
      */
     public static class DefaultFilePathGenerator extends FilePathGenerator {
-        private String dir = null;
-        private File file = null;
-
-        //Supress default constructor for noninstantiability
-        private DefaultFilePathGenerator() {
-            throw new AssertionError();
-        }
 
         /**
-         * dir is context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log"
-         * file is app log
+         * dir will be context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log"
+         * filename will be decided by the param filename and suffix together.
          *
          * @param context
+         * @param filename
+         * @param suffix
          */
-        DefaultFilePathGenerator(Context context) {
-            if (context != null) {
-                dir = context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log";
-            }
+        public DefaultFilePathGenerator(Context context, String filename, String suffix) {
+            super(context, filename, suffix);
+
         }
 
         /**
-         * dir is from the param.
-         * file is app log
+         * dir is from the param dir.
+         * filename will be decided by the param filename and suffix together.
          *
          * @param dir
+         * @param filename
+         * @param suffix
          */
-        DefaultFilePathGenerator(String dir) {
-            if (dir != null) {
-                this.dir = dir;
-            }
+        public DefaultFilePathGenerator(String dir, String filename, String suffix) {
+            super(dir, filename, suffix);
         }
 
         @Override
@@ -110,7 +165,7 @@ public abstract class FilePathGenerator {
                 logDir.mkdirs();
             }
 
-            file = new File(logDir, "app.log");
+            file = new File(logDir, filename+suffix);
 
             if (!file.exists()) {
                 try {
@@ -135,39 +190,32 @@ public abstract class FilePathGenerator {
 
     /**
      * Date FilePathGenerator
-     *
      */
     public static class DateFilePathGenerator extends FilePathGenerator {
-        private String dir = null;
-        private File file = null;
-
-        //Supress default constructor for noninstantiability
-        private DateFilePathGenerator() {
-            throw new AssertionError();
-        }
 
         /**
-         * dir is context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log"
-         * file is app log
+         * dir will be context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log"
+         * filename will be decided by the param filename and suffix together.
          *
          * @param context
+         * @param filename
+         * @param suffix
          */
-        DateFilePathGenerator(Context context) {
-            if (context != null) {
-                dir = context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log";
-            }
+        public DateFilePathGenerator(Context context, String filename, String suffix) {
+            super(context, filename, suffix);
+
         }
 
         /**
-         * dir is from the param.
-         * file is app log
+         * dir is from the param dir.
+         * filename will be decided by the param filename and suffix together.
          *
          * @param dir
+         * @param filename
+         * @param suffix
          */
-        DateFilePathGenerator(String dir) {
-            if (dir != null) {
-                this.dir = dir;
-            }
+        public DateFilePathGenerator(String dir, String filename, String suffix) {
+            super(dir, filename, suffix);
         }
 
         @Override
@@ -188,9 +236,10 @@ public abstract class FilePathGenerator {
             String myDateString = fdf.format(myDate);
 
             StringBuffer buffer = new StringBuffer();
-            buffer.append("app-");
+            buffer.append(filename);
+            buffer.append("-");
             buffer.append(myDateString);
-            buffer.append(".log");
+            buffer.append(suffix);
 
             file = new File(logDir, buffer.toString());
 
@@ -217,44 +266,35 @@ public abstract class FilePathGenerator {
 
     /**
      * LimitSize FilePathGenerator
-     *
      */
     public static class LimitSizeFilePathGenerator extends FilePathGenerator {
-        private String dir = null;
-        private File file = null;
         private int maxSize = 0;
 
-        //Supress default constructor for noninstantiability
-        private LimitSizeFilePathGenerator() {
-            throw new AssertionError();
-        }
-
         /**
-         * dir is context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log"
-         * file is app log
+         * dir is from the param dir.
+         * filename will be decided by the param filename and suffix together.
          *
          * @param context
+         * @param filename
+         * @param suffix
+         * @param maxSize
          */
-        LimitSizeFilePathGenerator(Context context, int maxSize) {
-            if (context != null) {
-                dir = context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log";
-            }
-
+        public LimitSizeFilePathGenerator(Context context, String filename, String suffix, int maxSize) {
+            super(context, filename, suffix);
             this.maxSize = maxSize;
         }
 
         /**
-         * dir is from the param.
-         * file is app log
+         * dir will be context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log"
+         * filename will be decided by the param filename and suffix together.
          *
          * @param dir
-         * @maxSize the max size of the file,with unit byte.
+         * @param filename
+         * @param suffix
+         * @param maxSize
          */
-        LimitSizeFilePathGenerator(String dir, int maxSize) {
-            if (dir != null) {
-                this.dir = dir;
-            }
-
+        public LimitSizeFilePathGenerator(String dir, String filename, String suffix, int maxSize) {
+            super(dir, filename, suffix);
             this.maxSize = maxSize;
         }
 
@@ -276,9 +316,10 @@ public abstract class FilePathGenerator {
             String myDateString = fdf.format(myDate);
 
             StringBuffer buffer = new StringBuffer();
-            buffer.append("app-");
+            buffer.append(filename);
+            buffer.append("-");
             buffer.append(myDateString);
-            buffer.append(".log");
+            buffer.append(suffix);
 
             file = new File(logDir, buffer.toString());
 
