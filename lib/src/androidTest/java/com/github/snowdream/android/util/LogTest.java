@@ -96,7 +96,7 @@ public class LogTest extends AndroidTestCase {
         Log.e(CUSTOM_TAG, "test", new Throwable("test"));
     }
 
-    public void testLogIntoFileWithFilePathGenerator() {
+    public void testLog2FileWithFilePathGenerator() {
         Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
 //        Log.setFilePathGenerator(new FilePathGenerator.DateFilePathGenerator("/mnt/sdcard/","app",".log"));
 //        Log.setFilePathGenerator(new FilePathGenerator.LimitSizeFilePathGenerator("/mnt/sdcard/","app",".log",10240));
@@ -108,7 +108,7 @@ public class LogTest extends AndroidTestCase {
         Log.e("test 5");
     }
 
-    public void testLogIntoFileWithLogFilter() {
+    public void testLog2FileWithLogFilter() {
         Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
 
         Log.addLogFilter(new LogFilter.LevelFilter(Log.LEVEL.DEBUG));
@@ -123,7 +123,7 @@ public class LogTest extends AndroidTestCase {
         Log.e("test 5");
     }
 
-    public void testLogIntoFileWithLogFormatter() {
+    public void testLog2FileWithLogFormatter() {
         Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
 
         Log.addLogFilter(new LogFilter.LevelFilter(Log.LEVEL.DEBUG));

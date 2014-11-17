@@ -33,7 +33,8 @@ import java.util.concurrent.ExecutorService;
  * </pre>
  * <p/>
  * 2.set the Tag for the log
- * Log.setTag("Android");
+ * <pre>
+ * Log.setGlobalTag("Android");
  * </pre>
  * <p/>
  * 3.log simple
@@ -73,10 +74,11 @@ import java.util.concurrent.ExecutorService;
  * </pre>
  * <p/>
  * 7.Log to File<BR>
- * log into one file
+ * log into one file With FilePathGenerator
  * <pre>
- * Log.setPath("/mnt/sdcard/debug.txt");
- * Log.setPolicy(Log.LOG_ALL_TO_FILE);
+ * Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
+ * //  Log.setFilePathGenerator(new FilePathGenerator.DateFilePathGenerator("/mnt/sdcard/","app",".log"));
+ * // Log.setFilePathGenerator(new FilePathGenerator.LimitSizeFilePathGenerator("/mnt/sdcard/","app",".log",10240));
  *
  * Log.d("test 1");
  * Log.v("test 2");
@@ -85,10 +87,13 @@ import java.util.concurrent.ExecutorService;
  * Log.e("test 5");
  * </pre>
  * <p/>
- * log into one directory with a lot of log files
+ * log into one file With LogFilter
  * <pre>
- * Log.setPath("/mnt/sdcard/snowdream/log","log","log");
- * Log.setPolicy(Log.LOG_ALL_TO_FILE);
+ *Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
+ *
+ * Log.addLogFilter(new LogFilter.LevelFilter(Log.LEVEL.DEBUG));
+ * // Log.addLogFilter(new LogFilter.TagFilter(TAG));
+ * // Log.addLogFilter(new LogFilter.ContentFilter(CUSTOM_TAG));
  *
  * Log.d("test 1");
  * Log.v("test 2");
@@ -96,6 +101,24 @@ import java.util.concurrent.ExecutorService;
  * Log.w("test 4");
  * Log.e("test 5");
  * </pre>
+ * <p/>
+ *
+ * log into one file With LogFormatter
+ * <pre>
+ *  Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
+ *
+ * Log.addLogFilter(new LogFilter.LevelFilter(Log.LEVEL.DEBUG));
+ *
+ *  Log.setLogFormatter(new LogFormatter.EclipseFormatter());
+ *  //        Log.setLogFormatter(new LogFormatter.IDEAFormatter());
+ *
+ * Log.d("test 1");
+ * Log.v("test 2");
+ * Log.i("test 3");
+ * Log.w("test 4");
+ * Log.e("test 5");
+ * </pre>
+ * <p/>
  */
 public final class Log {
 
