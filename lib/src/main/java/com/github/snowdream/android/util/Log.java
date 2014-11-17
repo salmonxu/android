@@ -32,12 +32,24 @@ import java.util.concurrent.ExecutorService;
  * Log.setEnabled(false);
  * </pre>
  * <p/>
- * 2.set the Tag for the log
+ * 2.enable/disable log to console
+ * <pre>
+ * Log.setLog2ConsoleEnabled(true);
+ * Log.setLog2ConsoleEnabled(false);
+ * </pre>
+ * <p/>
+ * 3.enable/disable log to file
+ * <pre>
+ * Log.setLog2FileEnabled(true);
+ * Log.setLog2FileEnabled(false);
+ * </pre>
+ * <p/>
+ * 4.set the Global Tag for the log
  * <pre>
  * Log.setGlobalTag("Android");
  * </pre>
  * <p/>
- * 3.log simple
+ * 5.log simple
  * <pre>
  * Log.d("test");
  * Log.v("test");
@@ -46,7 +58,7 @@ import java.util.concurrent.ExecutorService;
  * Log.e("test");
  * </pre>
  * <p/>
- * 4.log simple -- set custom tag
+ * 6.log simple -- set custom tag
  * <pre>
  * Log.d("TAG","test");
  * Log.v("TAG","test");
@@ -55,7 +67,7 @@ import java.util.concurrent.ExecutorService;
  * Log.e("TAG","test");
  * </pre>
  * <p/>
- * 5.log advance
+ * 7.log advance
  * <pre>
  * Log.d("test",new Throwable("test"));
  * Log.v("test",new Throwable("test"));
@@ -64,7 +76,7 @@ import java.util.concurrent.ExecutorService;
  * Log.e("test",new Throwable("test"));
  * </pre>
  * <p/>
- * 6.log advance -- set custom tag
+ * 8.log advance -- set custom tag
  * <pre>
  * Log.d("TAG","test",new Throwable("test"));
  * Log.v("TAG","test",new Throwable("test"));
@@ -73,7 +85,7 @@ import java.util.concurrent.ExecutorService;
  * Log.e("TAG","test",new Throwable("test"));
  * </pre>
  * <p/>
- * 7.Log to File<BR>
+ * 9.Log to File<BR>
  * log into one file With FilePathGenerator
  * <pre>
  * Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));

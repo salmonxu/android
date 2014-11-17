@@ -37,12 +37,24 @@ Log.setEnabled(true);
 Log.setEnabled(false);  
 ```
 
-2.set the Tag for the log  
+2.enable/disable log to console
 ```java
-Log.setTag("Android");  
+Log.setLog2ConsoleEnabled(true);
+Log.setLog2ConsoleEnabled(false);
 ```
 
-3.log simple  
+3.enable/disable log to file
+```java
+Log.setLog2FileEnabled(true);
+Log.setLog2FileEnabled(false);
+```
+
+4.set the global Tag for the log
+```java
+Log.setGlobalTag("Android");
+```
+
+5.log simple
 ```java
 Log.d("test");  
 Log.v("test");  
@@ -51,7 +63,7 @@ Log.w("test");
 Log.e("test");  
 ```
 
-4.log simple -- set custom tag  
+6.log simple -- set custom tag
 ```java
 Log.d("TAG","test");  
 Log.v("TAG","test");  
@@ -60,7 +72,7 @@ Log.w("TAG","test");
 Log.e("TAG","test");  
 ```
 
-5.log advance  
+7.log advance
 ```java
 Log.d("test",new Throwable("test"));  
 Log.v("test",new Throwable("test"));  
@@ -69,7 +81,7 @@ Log.w("test",new Throwable("test"));
 Log.e("test",new Throwable("test"));  
 ```
 
-6.log advance  -- set custom tag   
+8.log advance  -- set custom tag
 ```java
 Log.d("TAG","test",new Throwable("test"));  
 Log.v("TAG","test",new Throwable("test"));  
@@ -78,12 +90,13 @@ Log.w("TAG","test",new Throwable("test"));
 Log.e("TAG","test",new Throwable("test"));  
 ```
 
-7.Log to File
+9.Log to File
 
-log into one file      
+log into one file with FilePathGenerator
 ```java
-Log.setPath("/mnt/sdcard/debug.txt");
-Log.setPolicy(Log.LOG_ALL_TO_FILE);
+Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
+//Log.setFilePathGenerator(new FilePathGenerator.DateFilePathGenerator("/mnt/sdcard/","app",".log"));
+//Log.setFilePathGenerator(new FilePathGenerator.LimitSizeFilePathGenerator("/mnt/sdcard/","app",".log",10240));
 
 Log.d("test 1");
 Log.v("test 2");
@@ -92,10 +105,30 @@ Log.w("test 4");
 Log.e("test 5");
 ```
 
-log into one directory with a lot of log files
+log into one file with LogFilter
 ```java
-Log.setPath("/mnt/sdcard/snowdream/log","log","log");
-Log.setPolicy(Log.LOG_ALL_TO_FILE);
+Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
+
+Log.addLogFilter(new LogFilter.LevelFilter(Log.LEVEL.DEBUG));
+//Log.addLogFilter(new LogFilter.TagFilter(TAG));
+//Log.addLogFilter(new LogFilter.ContentFilter(CUSTOM_TAG));
+
+
+Log.d("test 1");
+Log.v("test 2");
+Log.i("test 3");
+Log.w("test 4");
+Log.e("test 5");
+```
+
+log into one file with LogFormatter
+```java
+Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
+
+Log.addLogFilter(new LogFilter.LevelFilter(Log.LEVEL.DEBUG));
+
+Log.setLogFormatter(new LogFormatter.EclipseFormatter());
+//Log.setLogFormatter(new LogFormatter.IDEAFormatter());
 
 Log.d("test 1");
 Log.v("test 2");
