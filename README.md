@@ -1,7 +1,7 @@
 #android-log
 [![Build Status](https://travis-ci.org/SnowdreamFramework/android-log.svg?branch=master)](https://travis-ci.org/SnowdreamFramework/android-log)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.snowdream.android.util/log/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.snowdream.android.util/log)
-[![Pledgie](https://pledgie.com/campaigns/27475.png)][https://pledgie.com/campaigns/27475]
+[![Pledgie](https://pledgie.com/campaigns/27475.png)](https://pledgie.com/campaigns/27475)
 
 ##Introduction
 android lib - log
