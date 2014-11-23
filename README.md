@@ -1,4 +1,5 @@
 #android-log
+[![Build Status](https://travis-ci.org/SnowdreamFramework/android-log.svg?branch=master)](https://travis-ci.org/SnowdreamFramework/android-log)
 
 ##Introduction
 android lib - log
