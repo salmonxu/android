@@ -1,5 +1,6 @@
 #android-log
 [![Build Status](https://travis-ci.org/SnowdreamFramework/android-log.svg?branch=master)](https://travis-ci.org/SnowdreamFramework/android-log)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.snowdream.android.util/log/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.snowdream.android.util/log)
 
 ##Introduction
 android lib - log
