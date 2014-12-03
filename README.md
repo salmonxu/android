@@ -1,7 +1,8 @@
 #android-log
 [![Build Status](https://travis-ci.org/SnowdreamFramework/android-log.svg?branch=master)](https://travis-ci.org/SnowdreamFramework/android-log)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.snowdream.android.util/log/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.snowdream.android.util/log)
-
+[![GITHUB](https://img.shields.io/github/issues/badges/shields.svg)](https://img.shields.io/github/issues/badges/shields.svg)
+[![LICENSE](http://img.shields.io/badge/license-MIT-red.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 [![Pledgie](https://pledgie.com/campaigns/27475.png)](https://pledgie.com/campaigns/27475)
 
