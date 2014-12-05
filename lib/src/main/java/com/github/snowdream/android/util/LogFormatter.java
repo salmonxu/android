@@ -5,7 +5,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
 
 /**
  * Decide the format of log will be written to the file.
- * <p/>
+ * 
  * Created by hui.yang on 2014/11/16.
  */
 public abstract class LogFormatter {

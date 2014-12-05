@@ -10,7 +10,7 @@ import java.util.Date;
 
 /**
  * Decide the absolute path of the file which log will be written to.
- * <p/>
+ * 
  * Created by hui.yang on 2014/11/13.
  */
 public abstract class FilePathGenerator {
@@ -81,7 +81,7 @@ public abstract class FilePathGenerator {
 
     /**
      * Generate the file path of the log.
-     * <p/>
+     * 
      * The file path should be absolute.
      *
      * @return the file path of the log
@@ -98,7 +98,7 @@ public abstract class FilePathGenerator {
     /**
      * It is time to generate the new file path of the log.
      * You can get the new and the old file path of the log.
-     * <p/>
+     * 
      * The file path should be absolute.
      *
      * @param newPath the new file path

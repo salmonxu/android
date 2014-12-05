@@ -26,7 +26,7 @@ import java.util.concurrent.Executors;
 
 /**
  * Write the Log to the file
- * <p/>
+ * 
  * Created by snowdream on 10/20/13.
  */
 public class Log2File {

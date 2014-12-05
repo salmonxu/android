@@ -6,7 +6,7 @@ import java.security.InvalidParameterException;
 
 /**
  * Decide which log will be written to the file.
- * <p/>
+ * 
  * Created by hui.yang on 2014/11/16.
  */
 public abstract class LogFilter {
@@ -32,7 +32,7 @@ public abstract class LogFilter {
 
         /**
          * set the tag which will not be filtered.
-         * <p/>
+         * 
          * if the tag is null or empty, then nothing will be filtered..
          *
          * @param tag
@@ -66,7 +66,7 @@ public abstract class LogFilter {
 
         /**
          * set the Level.Any log with the level below it will be filtered.
-         * <p/>
+         * 
          *
          * @param level the minimum level which will not be filtered.
          */

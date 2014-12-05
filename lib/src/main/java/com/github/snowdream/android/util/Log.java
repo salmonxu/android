@@ -24,31 +24,31 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Wrapper API for sending log output <BR /><BR />
- * <p/>
+ * Wrapper API for sending log output
+ * 
  * 1.enable/disable log
  * <pre>
  * Log.setEnabled(true);
  * Log.setEnabled(false);
  * </pre>
- * <p/>
+ * 
  * 2.enable/disable log to console
  * <pre>
  * Log.setLog2ConsoleEnabled(true);
  * Log.setLog2ConsoleEnabled(false);
  * </pre>
- * <p/>
+ * 
  * 3.enable/disable log to file
  * <pre>
  * Log.setLog2FileEnabled(true);
  * Log.setLog2FileEnabled(false);
  * </pre>
- * <p/>
+ * 
  * 4.set the Global Tag for the log
  * <pre>
  * Log.setGlobalTag("Android");
  * </pre>
- * <p/>
+ * 
  * 5.log simple
  * <pre>
  * Log.d("test");
@@ -57,7 +57,7 @@ import java.util.concurrent.ExecutorService;
  * Log.w("test");
  * Log.e("test");
  * </pre>
- * <p/>
+ * 
  * 6.log simple -- set custom tag
  * <pre>
  * Log.d("TAG","test");
@@ -66,7 +66,7 @@ import java.util.concurrent.ExecutorService;
  * Log.w("TAG","test");
  * Log.e("TAG","test");
  * </pre>
- * <p/>
+ * 
  * 7.log advance
  * <pre>
  * Log.d("test",new Throwable("test"));
@@ -75,7 +75,7 @@ import java.util.concurrent.ExecutorService;
  * Log.w("test",new Throwable("test"));
  * Log.e("test",new Throwable("test"));
  * </pre>
- * <p/>
+ * 
  * 8.log advance -- set custom tag
  * <pre>
  * Log.d("TAG","test",new Throwable("test"));
@@ -84,7 +84,7 @@ import java.util.concurrent.ExecutorService;
  * Log.w("TAG","test",new Throwable("test"));
  * Log.e("TAG","test",new Throwable("test"));
  * </pre>
- * <p/>
+ * 
  * 9.Log to File<BR>
  * log into one file With FilePathGenerator
  * <pre>
@@ -98,7 +98,7 @@ import java.util.concurrent.ExecutorService;
  * Log.w("test 4");
  * Log.e("test 5");
  * </pre>
- * <p/>
+ * 
  * log into one file With LogFilter
  * <pre>
  *Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
@@ -113,7 +113,7 @@ import java.util.concurrent.ExecutorService;
  * Log.w("test 4");
  * Log.e("test 5");
  * </pre>
- * <p/>
+ * 
  *
  * log into one file With LogFormatter
  * <pre>
@@ -130,7 +130,7 @@ import java.util.concurrent.ExecutorService;
  * Log.w("test 4");
  * Log.e("test 5");
  * </pre>
- * <p/>
+ * 
  */
 public final class Log {
 
@@ -351,7 +351,7 @@ public final class Log {
 
     /**
      * set the path of the log file
-     * <p/>
+     * 
      * use {@link #setFilePathGenerator} instead.
      * This method will be removed in the near future.
      *
@@ -400,7 +400,7 @@ public final class Log {
 
     /**
      * add log filter
-     * <p/>
+     * 
      * each one kind
      *
      * @param filter
@@ -469,7 +469,7 @@ public final class Log {
 
     /**
      * get the policy of the log
-     * <p/>
+     * 
      * use {@link com.github.snowdream.android.util.LogFilter} instead.
      * This method will be removed in the near future.
      *
@@ -482,7 +482,7 @@ public final class Log {
 
     /**
      * set the policy of the log
-     * <p/>
+     * 
      * use {@link com.github.snowdream.android.util.LogFilter} instead.
      * This method will be removed in the near future.
      *
@@ -548,10 +548,6 @@ public final class Log {
      * The default level of any tag is set to INFO.
      * This means that any level above and including INFO will be logged.
      * Before you make any calls to a logging method you should check to see if your tag should be logged.
-     * You can change the default level by setting a system property:
-     * 'setprop log.tag.<YOUR_LOG_TAG> <LEVEL>' Where level is either VERBOSE, DEBUG, INFO, WARN, ERROR, ASSERT, or SUPPRESS.
-     * SUPPRESS will turn off all logging for your tag.
-     * You can also create a local.prop file that with the following in it: 'log.tag.<YOUR_LOG_TAG>=<LEVEL>' and place that in /data/local.prop.
      *
      * @param tag   The tag to check
      * @param level The level to check
@@ -585,7 +581,7 @@ public final class Log {
 
     /**
      * Get the Tag of the application
-     * <p/>
+     * 
      * This method will be removed in the near future.
      * use {@link #getGlobalTag}
      */
@@ -624,7 +620,7 @@ public final class Log {
 
     /**
      * set the log file path
-     * <p/>
+     * 
      * The log file path will be: logDirPath + logFileBaseName + Formated time +logFileSuffix
      * use {@link #setFilePathGenerator} instead.
      * This method will be removed in the near future.
