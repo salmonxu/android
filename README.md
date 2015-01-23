@@ -36,6 +36,9 @@ or Gradle:
     compile 'com.github.snowdream.android.util:log:1.1.0'
 ```
 
+##Docs
+[http://snowdreamframework.github.io/android-log/docs/1.1.0/javadoc/](http://snowdreamframework.github.io/android-log/docs/1.1.0/javadoc/)
+
 ##Usage
 1.enable/disable log  
 ```java
