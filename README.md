@@ -21,19 +21,19 @@ Android 2.2+
 Apache commons-lang3   [http://commons.apache.org/proper/commons-lang/](http://commons.apache.org/proper/commons-lang/)
 
 ##Download
-Download [the latest jar][1] or grab via Maven:
+grab via Maven:
 
 ```xml
 <dependency>
   <groupId>com.github.snowdream.android.util</groupId>
   <artifactId>log</artifactId>
-  <version>1.0.4</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
 or Gradle:
 ```groovy
-    compile 'com.github.snowdream.android.util:log:1.0.4'
+    compile 'com.github.snowdream.android.util:log:1.1.0'
 ```
 
 ##Usage
@@ -101,6 +101,7 @@ Log.e("TAG","test",new Throwable("test"));
 log into one file with FilePathGenerator
 ```java
 Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
+//Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator(context,"app",".log"));
 //Log.setFilePathGenerator(new FilePathGenerator.DateFilePathGenerator("/mnt/sdcard/","app",".log"));
 //Log.setFilePathGenerator(new FilePathGenerator.LimitSizeFilePathGenerator("/mnt/sdcard/","app",".log",10240));
 
@@ -159,5 +160,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
-
-[1]:https://oss.sonatype.org/content/groups/public/com/github/snowdream/android/util/log/1.0.4/log-1.0.4.jar
