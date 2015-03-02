@@ -27,17 +27,17 @@ grab via Maven:
 <dependency>
   <groupId>com.github.snowdream.android.util</groupId>
   <artifactId>log</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 
 or Gradle:
 ```groovy
-    compile 'com.github.snowdream.android.util:log:1.1.0'
+    compile 'com.github.snowdream.android.util:log:1.2.0'
 ```
 
 ##Docs
-[http://snowdreamframework.github.io/android-log/docs/1.1.0/javadoc/](http://snowdreamframework.github.io/android-log/docs/1.1.0/javadoc/)
+[http://snowdreamframework.github.io/android-log/docs/1.2.0/javadoc/](http://snowdreamframework.github.io/android-log/docs/1.2.0/javadoc/)
 
 ##Usage
 1.enable/disable log  
