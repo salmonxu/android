@@ -85,6 +85,8 @@ afterEvaluate { project ->
 
     task androidReleaseJar(type: Jar, dependsOn: assembleRelease) {
         from "$buildDir/intermediates/classes/release/"
+        exclude '**/BuildConfig.class'
+        exclude '**/R.class'
     }
 
     task androidJavadocsJar(type: Jar) {
