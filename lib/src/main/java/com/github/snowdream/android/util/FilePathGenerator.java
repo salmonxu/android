@@ -93,7 +93,7 @@ public abstract class FilePathGenerator {
      *
      * @return if true,generate the file path of the log, otherwise not.
      */
-    public abstract Boolean isGenerate();
+    public abstract boolean isGenerate();
 
     /**
      * It is time to generate the new file path of the log.
@@ -179,7 +179,7 @@ public abstract class FilePathGenerator {
         }
 
         @Override
-        public Boolean isGenerate() {
+        public boolean isGenerate() {
             return (file == null) || !file.exists();
         }
 
@@ -255,7 +255,7 @@ public abstract class FilePathGenerator {
         }
 
         @Override
-        public Boolean isGenerate() {
+        public boolean isGenerate() {
             return (file == null) || !file.exists();
         }
 
@@ -335,7 +335,7 @@ public abstract class FilePathGenerator {
         }
 
         @Override
-        public Boolean isGenerate() {
+        public boolean isGenerate() {
             return (file == null) || !file.exists() || file.length() >= maxSize;
         }
 
