@@ -97,7 +97,8 @@ public class LogTest extends AndroidTestCase {
     }
 
     public void testLog2FileWithFilePathGenerator() {
-        Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
+        //Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator("/mnt/sdcard/","app",".log"));
+        Log.setFilePathGenerator(new FilePathGenerator.DefaultFilePathGenerator(getContext(),"app",".log"));
 //        Log.setFilePathGenerator(new FilePathGenerator.DateFilePathGenerator("/mnt/sdcard/","app",".log"));
 //        Log.setFilePathGenerator(new FilePathGenerator.LimitSizeFilePathGenerator("/mnt/sdcard/","app",".log",10240));
 

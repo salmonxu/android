@@ -64,14 +64,16 @@ public class Log2File {
 
                     File file = GetFileFromPath(path);
 
-                    try {
-                        out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
-                        out.println(str);
-                        out.flush();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        out.close();
+                    if (file != null) {
+                        try {
+                            out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
+                            out.println(str);
+                            out.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            out.close();
+                        }
                     }
                 }
             });

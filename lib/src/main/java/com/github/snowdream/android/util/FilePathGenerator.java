@@ -34,7 +34,7 @@ public abstract class FilePathGenerator {
     }
 
     /**
-     * dir will be context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log"
+     * dir will be context.getExternalFilesDir("null").getAbsolutePath() + File.separator + "snowdream" + File.separator + "log"
      * filename will be decided by the param filename and suffix together.
      *
      * @param context
@@ -46,7 +46,7 @@ public abstract class FilePathGenerator {
             throw new NullPointerException("The Context should not be null.");
         }
 
-        dir = context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log";
+        dir = context.getExternalFilesDir(null).getAbsolutePath() + File.separator + "snowdream" + File.separator + "log";
 
         if (!TextUtils.isEmpty(filename)) {
             this.filename = filename;
@@ -66,7 +66,7 @@ public abstract class FilePathGenerator {
      * @param suffix
      */
     public FilePathGenerator(String dir, String filename, String suffix) {
-        if (dir != null) {
+        if (!TextUtils.isEmpty(dir)) {
             this.dir = dir;
         }
 
@@ -128,7 +128,7 @@ public abstract class FilePathGenerator {
     public static class DefaultFilePathGenerator extends FilePathGenerator {
 
         /**
-         * dir will be context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log"
+         * dir will be context.getExternalFilesDir("null").getAbsolutePath() + File.separator + "snowdream" + File.separator + "log"
          * filename will be decided by the param filename and suffix together.
          *
          * @param context
@@ -194,7 +194,7 @@ public abstract class FilePathGenerator {
     public static class DateFilePathGenerator extends FilePathGenerator {
 
         /**
-         * dir will be context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log"
+         * dir will be context.getExternalFilesDir("null").getAbsolutePath() + File.separator + "snowdream" + File.separator + "log"
          * filename will be decided by the param filename and suffix together.
          *
          * @param context
@@ -285,7 +285,7 @@ public abstract class FilePathGenerator {
         }
 
         /**
-         * dir will be context.getExternalFilesDir("null").getAbsolutePath() + File.pathSeparator + "snowdream" + File.pathSeparator + "log"
+         * dir will be context.getExternalFilesDir("null").getAbsolutePath() + File.separator + "snowdream" + File.separator + "log"
          * filename will be decided by the param filename and suffix together.
          *
          * @param dir

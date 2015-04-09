@@ -313,7 +313,7 @@ public final class Log {
             }
         }
 
-        if (!isFilter) {
+        if (!isFilter && !TextUtils.isEmpty(generator.getPath())) {
             Log2File.log2file(generator.getPath(), formatter.format(level, tag, msg, tr));
         }
     }
