@@ -21,6 +21,15 @@ android {
         testFunctionalTest true
     }
 
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-lib-optimize.txt'), 'proguard-rules.txt'
+            //signingConfig signingConfigs.release
+        }
+    }
+
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/NOTICE'
