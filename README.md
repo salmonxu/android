@@ -6,6 +6,8 @@
 
 [![Pledgie](https://pledgie.com/campaigns/27475.png)](https://pledgie.com/campaigns/27475)
 
+#The Project has moved to [https://github.com/SnowdreamFramework/SnowdreamFramework/tree/master/modules/log](https://github.com/SnowdreamFramework/SnowdreamFramework/tree/master/modules/log)
+
 ##Introduction
 android lib - log
 
